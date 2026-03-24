@@ -1,15 +1,21 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Book Space exam project",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch index.js",
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "mongodb",
+    "rest-api",
+    "exam-project"
+  ],
+  "author": "Hani Bassam",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
