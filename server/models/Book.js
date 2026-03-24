@@ -14,7 +14,7 @@ const bookSchema = new mongoose.Schema(
         },
         genre: {
             type: String,
-            trim: true,
+            default: [],
         },
         description: {
             type: [String],
@@ -30,14 +30,13 @@ const bookSchema = new mongoose.Schema(
             min : 1,
         },
         publishedYear: {
-            type: Date,
-            min: 0,
+            type: Number,
         },
         language: {
             type: String,
             default: "English"
         },
-        avarageRating: {
+        averageRating: {
             type: Number,
             default: 0,
             min: 0,
