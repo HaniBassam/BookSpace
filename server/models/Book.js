@@ -13,7 +13,7 @@ const bookSchema = new mongoose.Schema(
             trim: true,
         },
         genre: {
-            type: String,
+            type: [String],
             default: [],
         },
         description: {
