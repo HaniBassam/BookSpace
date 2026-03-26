@@ -68,6 +68,15 @@ body {
   cursor: pointer;
 }
 
+.genre-select {
+  min-width: 180px;
+  padding: 0.9rem 1rem;
+  border: 4px solid #d9c9bc;
+  border-radius: 999px;
+  background: white;
+  color: #2f241f;
+}
+
 .books-title {
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
@@ -176,6 +185,7 @@ body {
   }
 
   .search-input,
+  .genre-select,
   .search-button {
     width: auto;
   }

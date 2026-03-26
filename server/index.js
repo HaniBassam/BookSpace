@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 
 app.get("/books", async (req, res) => {
   try {
-    const { search } = req.query;
+    const { search, genre } = req.query;
 
     let query = {};
 
@@ -35,6 +35,10 @@ app.get("/books", async (req, res) => {
           { genre: { $regex: search, $options: "i" } },
         ],
       };
+    }
+
+    if (genre) {
+      query.genre = { $regex: genre, $options: "i" };
     }
 
     const books = await Book.find(query);

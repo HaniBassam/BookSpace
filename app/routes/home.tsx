@@ -14,17 +14,18 @@ export function meta({}: Route.MetaArgs) {
 export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const search = url.searchParams.get("search") || "";
+  const genre = url.searchParams.get("genre") || "";
 
   const response = await fetch(
-    `http://localhost:5001/books?search=${encodeURIComponent(search)}`
+    `http://localhost:5001/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
   );
   const books = await response.json();
 
-  return { books, search };
+  return { books, search, genre };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { books, search } = loaderData;
+  const { books, search, genre } = loaderData;
 
   const popularBooks = [...books]
     .sort((a, b) => b.ratingsCount - a.ratingsCount)
@@ -42,7 +43,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main className="home-page">
       <div className="hero">
-        
+
         <section className="hero-intro">
           <p className="header">Welcome to Book Space!</p>
           <h1 className="hero-title">Find Your Next Favorite Book</h1>
@@ -59,6 +60,17 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               defaultValue={search}
               className="search-input"
             />
+
+<select name="genre" defaultValue={genre} className="genre-select">
+              <option value="">All Genres</option>
+              <option value="Fiction">Fiction</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Science Fiction">Science Fiction</option>
+              <option value="Mystery">Young Adult</option>
+              <option value="Romance">Romance</option>
+            </select>
+
+
             <button type="submit" className="search-button">
               Search
             </button>
