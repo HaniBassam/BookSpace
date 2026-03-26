@@ -99,6 +99,34 @@ body {
   font-size: 0.95rem;
   color: #6a544b;
 }
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.scroll-hint {
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #7a5c4f;
+  background: rgba(122, 92, 79, 0.08);
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+}
+
+.scroll-arrow {
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  .scroll-hint {
+    display: inline-flex;
+  }
+}
 
 
 @media (max-width: 768px) {
@@ -116,15 +144,40 @@ body {
   }
 
   .book-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: 160px;
+    grid-template-columns: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .book-grid a {
+    scroll-snap-align: start;
+  }
+
+  .book-card {
+    padding: 0.75rem;
+    height: 240px;
+  }
+
+  .book-cover {
+    height: 100px;
+  }
+
+  .book-title {
+    font-size: 0.95rem;
+  }
+
+  .book-author,
+  .book-rating {
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 520px) {
-  .book-grid {
-    grid-template-columns: 1fr;
-  }
-
   .hero-title {
     font-size: 2rem;
   }

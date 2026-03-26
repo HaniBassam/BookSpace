@@ -21,40 +21,124 @@ export async function loader() {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { books } = loaderData;
 
+  const popularBooks = [...books]
+    .sort((a, b) => b.ratingsCount - a.ratingsCount)
+    .slice(0, 10);
+
+  const topRatedBooks = [...books]
+    .sort((a, b) => b.averageRating - a.averageRating)
+    .slice(0, 10);
+
+  const newestBooks = [...books]
+    .sort((a, b) => b.publishedYear - a.publishedYear)
+    .slice(0, 10);
+
+
   return (
     <main className="home-page">
-      <section className="hero">
-        <p className="header">Welcome to Book Space!</p>
-        <h1 className="hero-title">Find Your Next Favorite Book</h1>
-        <p className="hero-text">
-          Explore books, keep track of what you read, and build your own reading
-          space.
-        </p>
+      <div className="hero">
+        <section className="hero-intro">
+          <p className="header">Welcome to Book Space!</p>
+          <h1 className="hero-title">Find Your Next Favorite Book</h1>
+          <p className="hero-text">
+            Explore books, keep track of what you read, and build your own
+            reading space.
+          </p>
+        </section>
 
-        <h2 className="books-title">Books</h2>
+        <section>
+          <div className="section-header">
+            <h2 className="books-title">Popular</h2>
+            <span className="scroll-hint">
+              Swipe <span className="scroll-arrow">→</span>
+            </span>
+          </div>
 
-        <div className="book-grid">
-          {books.map((book: any) => (
-            <Link key={book._id} to={`/books/${book._id}`}>
-              <article className="book-card">
-                <img
-                  src={book.coverImageUrl}
-                  alt={book.title}
-                  width="120"
-                  className="book-cover"
-                />
-                <div className="book-content">
-                  <h3 className="book-title">{book.title}</h3>
-                  <p className="book-author">{book.author}</p>
-                  <p className="book-rating">
-                    Rating: {book.averageRating?.toFixed(1)}
-                  </p>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </section>
+          <div className="book-grid">
+            {popularBooks.map((book: any) => (
+              <Link key={book._id} to={`/books/${book._id}`}>
+                <article className="book-card">
+                  <img
+                    src={book.coverImageUrl}
+                    alt={book.title}
+                    width="120"
+                    className="book-cover"
+                  />
+                  <div className="book-content">
+                    <h3 className="book-title">{book.title}</h3>
+                    <p className="book-author">{book.author}</p>
+                    <p className="book-rating">
+                      Rating: {book.averageRating?.toFixed(1)}
+                    </p>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="section-header">
+            <h2 className="books-title">Top Rated</h2>
+            <span className="scroll-hint">
+              Swipe <span className="scroll-arrow">→</span>
+            </span>
+          </div>
+
+          <div className="book-grid">
+            {topRatedBooks.map((book: any) => (
+              <Link key={book._id} to={`/books/${book._id}`}>
+                <article className="book-card">
+                  <img
+                    src={book.coverImageUrl}
+                    alt={book.title}
+                    width="120"
+                    className="book-cover"
+                  />
+                  <div className="book-content">
+                    <h3 className="book-title">{book.title}</h3>
+                    <p className="book-author">{book.author}</p>
+                    <p className="book-rating">
+                      Rating: {book.averageRating?.toFixed(1)}
+                    </p>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div className="section-header">
+            <h2 className="books-title">Newest</h2>
+            <span className="scroll-hint">
+              Swipe <span className="scroll-arrow">→</span>
+            </span>
+          </div>
+
+          <div className="book-grid">
+            {newestBooks.map((book: any) => (
+              <Link key={book._id} to={`/books/${book._id}`}>
+                <article className="book-card">
+                  <img
+                    src={book.coverImageUrl}
+                    alt={book.title}
+                    width="120"
+                    className="book-cover"
+                  />
+                  <div className="book-content">
+                    <h3 className="book-title">{book.title}</h3>
+                    <p className="book-author">{book.author}</p>
+                    <p className="book-rating">
+                      Rating: {book.averageRating?.toFixed(1)}
+                    </p>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
