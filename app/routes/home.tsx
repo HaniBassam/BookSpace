@@ -10,3 +10,21 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export default function Home() {
+  return (
+    <main>
+      <section>
+        <p>Welcome to Book Space!</p>
+        <h1>Find Your Next Favorite Book</h1>
+        <p>
+          Explore books, keep track of what you read, and build your own reading space.
+        </p>
+        <section>
+          
+        </section>
+        <h2>Books</h2>
+        <p>Your books will appear here.</p>
+      </section>
+    </main>
+  );
+}
