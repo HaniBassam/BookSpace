@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/books.$id";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const saveSuccess = url.searchParams.get("saved") === "1";
+
   const response = await fetch(`http://localhost:5001/books/${params.id}`);
   const book = await response.json();
 
@@ -23,11 +26,21 @@ export async function loader({ params }: Route.LoaderArgs) {
     )
     .slice(0, 4);
 
-  return { book, similarBooks, reviews };
+  return { book, similarBooks, reviews, saveSuccess };
 }
 
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
+  const intent = String(formData.get("intent") || "review");
+
+  if (intent === "save") {
+    await fetch(`http://localhost:5001/books/${params.id}/save`, {
+      method: "POST",
+    });
+
+    return redirect(`/books/${params.id}?saved=1`);
+  }
+
   const rating = Number(formData.get("rating"));
   const body = String(formData.get("body") || "");
 
@@ -43,7 +56,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 }
 
 export default function BookDetail({ loaderData }: Route.ComponentProps) {
-  const { book, similarBooks, reviews } = loaderData;
+  const { book, similarBooks, reviews, saveSuccess } = loaderData;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [selectedRating, setSelectedRating] = useState(5);
   const [reviewBody, setReviewBody] = useState("");
@@ -94,6 +107,17 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
                 {isDescriptionExpanded ? "Show less" : "Read more"}
               </button>
             ) : null}
+
+            {saveSuccess ? (
+              <p className="save-confirmation">Book saved to your collection.</p>
+            ) : null}
+
+            <Form method="post" className="save-book-form">
+              <input type="hidden" name="intent" value="save" />
+              <button type="submit" className="save-book-button">
+                Save book
+              </button>
+            </Form>
           </div>
         </div>
 
@@ -101,6 +125,7 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
           <h2>Reviews</h2>
 
           <Form method="post" className="review-form">
+            <input type="hidden" name="intent" value="review" />
             <fieldset className="review-field review-stars-group">
               <span>Rating</span>
               <div className="review-stars">

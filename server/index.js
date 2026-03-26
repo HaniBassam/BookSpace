@@ -116,6 +116,28 @@ app.post("/books/:id/reviews", async (req, res) => {
   }
 });
 
+app.post("/books/:id/save", async (req, res) => {
+  try {
+    const demoUser = await User.findOne({ email: "demo@bookspace.com" });
+
+    if (!demoUser) {
+      return res.status(404).json({ message: "Demo user not found" });
+    }
+
+    await User.findByIdAndUpdate(demoUser._id, {
+      $addToSet: { savedBooks: req.params.id },
+    });
+
+    res.status(200).json({ message: "Book saved successfully" });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to save book" });
+    }
+  }
+});
+
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI);

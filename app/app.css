@@ -247,6 +247,28 @@ body {
   cursor: pointer;
 }
 
+.save-book-form {
+  margin-top: 1rem;
+}
+
+.save-confirmation {
+  margin-top: 1rem;
+  margin-bottom: 0;
+  color: #4f7a5c;
+  font-weight: 600;
+}
+
+.save-book-button {
+  padding: 0.85rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: #7a5c4f;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .similar-books h2 {
   margin: 0 0 1.5rem;
   font-size: 1.5rem;
