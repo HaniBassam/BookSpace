@@ -21,25 +21,34 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const { books } = loaderData;
 
   return (
-    <main>
-      <section>
-        <p>Welcome to Book Space!</p>
-        <h1>Find Your Next Favorite Book</h1>
-        <p>
+    <main className="home-page">
+      <section className="hero">
+        <p className="header">Welcome to Book Space!</p>
+        <h1 className="hero-title">Find Your Next Favorite Book</h1>
+        <p className="hero-text">
           Explore books, keep track of what you read, and build your own reading
           space.
         </p>
-        <section>
-          
-        </section>
-        <h2>Books</h2>
-        <div>
+        
+        
+        <h2 className="books-title">Books</h2>
+
+        <div className="book-grid">
           {books.map((book: any) => (
-           <article key={book._id}>
-            <img src={book.coverImageUrl} alt={book.title} width="120" /> 
-              <h3>{book.title}</h3>
-              <p>{book.author}</p>
-              <p>Rating: {book.averageRating?.toFixed(1)}</p>
+            <article key={book._id} className="book-card">
+              <img
+                src={book.coverImageUrl}
+                alt={book.title}
+                width="120"
+                className="book-cover"
+              />
+              <div className="book-content">
+              <h3 className="book-title">{book.title}</h3>
+              <p className="book-author">{book.author}</p>
+              <p className="book-rating">
+                Rating: {book.averageRating?.toFixed(1)}
+              </p>
+              </div>
             </article>
           ))}
         </div>
