@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import type { Route } from "./+types/books.$id";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const response = await fetch(`http://localhost:5001/books/${params.id}`);
   const book = await response.json();
+
+  const reviewsResponse = await fetch(
+    `http://localhost:5001/books/${params.id}/reviews`
+  );
+  const reviews = await reviewsResponse.json();
 
   const booksResponse = await fetch("http://localhost:5001/books");
   const books = await booksResponse.json();
@@ -17,11 +23,20 @@ export async function loader({ params }: Route.LoaderArgs) {
     )
     .slice(0, 4);
 
-  return { book, similarBooks };
+  return { book, similarBooks, reviews };
 }
 
 export default function BookDetail({ loaderData }: Route.ComponentProps) {
-  const { book, similarBooks } = loaderData;
+  const { book, similarBooks, reviews } = loaderData;
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+  const descriptionText = Array.isArray(book.description)
+    ? book.description.join(" ")
+    : book.description;
+  const shortDescription =
+    descriptionText.length > 320
+      ? `${descriptionText.slice(0, 320).trim()}...`
+      : descriptionText;
 
   return (
     <main className="book-detail-page">
@@ -43,9 +58,37 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
             </p>
 
             <p className="book-detail-year">Published: {book.publishedYear}</p>
-            <p className="book-detail-description">{book.description}</p>
+            <p className="book-detail-description">
+              {isDescriptionExpanded ? descriptionText : shortDescription}
+            </p>
+            {descriptionText.length > 320 ? (
+              <button
+                type="button"
+                className="description-toggle"
+                onClick={() => setIsDescriptionExpanded((value) => !value)}
+              >
+                {isDescriptionExpanded ? "Show less" : "Read more"}
+              </button>
+            ) : null}
           </div>
         </div>
+
+        <section className="reviews-section">
+          <h2>Reviews</h2>
+
+          {reviews.length === 0 ? (
+            <p>No reviews yet.</p>
+          ) : (
+            <div className="reviews-list">
+              {reviews.map((review: any) => (
+                <article key={review._id} className="review-card">
+                  <p className="review-rating">Rating: {review.rating}/5</p>
+                  <p className="review-body">{review.body}</p>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
 
         <section className="similar-books">
           <h2>Similar Books</h2>

@@ -5,6 +5,10 @@ body {
   color: #2f241f;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .home-page {
   min-height: 100vh;
   padding: 3rem 1.5rem;
@@ -13,6 +17,10 @@ body {
 .hero {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.hero > section {
+  margin-bottom: 2.5rem;
 }
 
 .header {
@@ -190,6 +198,7 @@ body {
   width: 100%;
   border-radius: 1rem;
   box-shadow: 0 12px 30px rgba(72, 52, 43, 0.12);
+  display: block;
 }
 
 .book-detail-content {
@@ -227,9 +236,53 @@ body {
   color: #3f312b;
 }
 
+.description-toggle {
+  margin-top: 0.85rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #7a5c4f;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .similar-books h2 {
   margin: 0 0 1.5rem;
   font-size: 1.5rem;
+}
+
+.reviews-section {
+  margin-bottom: 3rem;
+}
+
+.reviews-section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.5rem;
+}
+
+.reviews-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.review-card {
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: #fffaf5;
+  box-shadow: 0 10px 30px rgba(72, 52, 43, 0.08);
+}
+
+.review-rating {
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+  color: #7a5c4f;
+}
+
+.review-body {
+  margin: 0;
+  line-height: 1.7;
+  color: #3f312b;
 }
 
 .similar-books .book-grid {
@@ -272,13 +325,19 @@ body {
     padding: 2rem 1rem;
   }
 
+  .hero > section {
+    margin-bottom: 2rem;
+  }
+
   .hero-title {
     font-size: 2.5rem;
+    line-height: 1.15;
   }
 
   .hero-text {
     font-size: 1rem;
     margin-bottom: 2rem;
+    max-width: none;
   }
 
   .search-form {
@@ -288,7 +347,8 @@ body {
   .search-input,
   .genre-select,
   .search-button {
-    width: auto;
+    width: 100%;
+    min-width: 0;
   }
 
   .book-grid {
@@ -326,8 +386,30 @@ body {
 }
 
 @media (max-width: 520px) {
+  .home-page,
+  .book-detail-page {
+    padding: 1.5rem 0.9rem;
+  }
+
   .hero-title {
     font-size: 2rem;
+    line-height: 1.1;
+  }
+
+  .books-title,
+  .reviews-section h2,
+  .similar-books h2 {
+    font-size: 1.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-header {
+    align-items: flex-start;
+  }
+
+  .scroll-hint {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.55rem;
   }
 }
 
@@ -337,16 +419,35 @@ body {
     padding: 2rem 1rem;
   }
 
+  .back-link {
+    margin-bottom: 1.25rem;
+  }
+
   .book-detail-layout {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .book-detail-layout img {
-    max-width: 320px;
+    max-width: 220px;
+    margin: 0 auto;
   }
 
   .book-detail-content {
     padding: 1.25rem;
+  }
+
+  .book-detail-title {
+    font-size: 2.25rem;
+  }
+
+  .book-detail-description,
+  .review-body {
+    line-height: 1.65;
+  }
+
+  .reviews-section {
+    margin-bottom: 2rem;
   }
 
   .similar-books .book-grid {

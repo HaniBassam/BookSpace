@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Book from "./models/Book.js";
+import Review from "./models/Review.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -66,6 +67,19 @@ app.get("/books/:id", async (req, res) => {
       res.status(500).json({ message: error.message });
     } else {
       res.status(500).json({ message: "Failed to fetch book" });
+    }
+  }
+});
+
+app.get("/books/:id/reviews", async (req, res) => {
+  try {
+    const reviews = await Review.find({ book: req.params.id });
+    res.json(reviews);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to fetch reviews" });
     }
   }
 });
