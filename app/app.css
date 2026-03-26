@@ -46,21 +46,34 @@ body {
 
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(4,minmax(0,1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1.25rem;
+  align-items: start;
+}
+
+.book-grid a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  height: 100%;
 }
 
 .book-card {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
   padding: 1rem;
   border-radius: 1rem;
   background: #fffaf5;
   box-shadow: 0 10px 30px rgba(72, 52, 43, 0.08);
+  overflow: hidden;
 }
 
 .book-cover {
   width: 100%;
-  height: 390px;
+  height: 360px;
   object-fit: cover;
   border-radius: 0.75rem;
   display: block;
@@ -68,13 +81,16 @@ body {
 }
 
 .book-content {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-height: 96px;
 }
 
 .book-title {
   margin: 0;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.35;
 }
 
 .book-author,
