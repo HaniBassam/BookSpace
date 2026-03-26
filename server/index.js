@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import bcrypt from "bcryptjs";
 import Book from "./models/Book.js";
 import Review from "./models/Review.js";
 import User from "./models/User.js";
@@ -18,6 +19,37 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+app.post("/signup", async (req, res) => {
+  try {
+    const { fullName, email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists" });
+    }
+
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      fullName,
+      email,
+      passwordHash: passwordHash,
+    });
+
+    res.status(201).json({
+      message: "User created successfully",
+      user,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to sign up" });
+    }
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("API is running...");
