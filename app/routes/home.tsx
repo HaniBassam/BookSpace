@@ -26,20 +26,23 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         <p>Welcome to Book Space!</p>
         <h1>Find Your Next Favorite Book</h1>
         <p>
-          Explore books, keep track of what you read, and build your own reading space.
+          Explore books, keep track of what you read, and build your own reading
+          space.
         </p>
         <section>
           
         </section>
         <h2>Books</h2>
-        <ul>
+        <div>
           {books.map((book: any) => (
-            <li key={book._id}>
+           <article key={book._id}>
+            <img src={book.coverImageUrl} alt={book.title} width="120" /> 
               <h3>{book.title}</h3>
               <p>{book.author}</p>
-            </li>
+              <p>Rating: {book.averageRating?.toFixed(1)}</p>
+            </article>
           ))}
-        </ul>
+        </div>
       </section>
     </main>
   );
