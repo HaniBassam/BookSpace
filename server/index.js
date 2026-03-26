@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Book from "./models/Book.js";
 import Review from "./models/Review.js";
+import User from "./models/User.js";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -80,6 +81,37 @@ app.get("/books/:id/reviews", async (req, res) => {
       res.status(500).json({ message: error.message });
     } else {
       res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  }
+});
+
+app.post("/books/:id/reviews", async (req, res) => {
+  try {
+    const { rating, body } = req.body;
+
+    const demoUser = await User.findOne({ email: "demo@bookspace.com" });
+
+    if (!demoUser) {
+      return res.status(404).json({ message: "Demo user not found" });
+    }
+
+    const review = await Review.create({
+      book: req.params.id,
+      user: demoUser._id,
+      rating,
+      body,
+    });
+
+    await Book.findByIdAndUpdate(req.params.id, {
+      $push: { reviews: review._id },
+    });
+
+    res.status(201).json(review);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to create review" });
     }
   }
 });

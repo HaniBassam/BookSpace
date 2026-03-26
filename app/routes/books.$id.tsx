@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router";
+import { useEffect, useState } from "react";
+import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/books.$id";
 
 export async function loader({ params }: Route.LoaderArgs) {
@@ -26,9 +26,27 @@ export async function loader({ params }: Route.LoaderArgs) {
   return { book, similarBooks, reviews };
 }
 
+export async function action({ request, params }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const rating = Number(formData.get("rating"));
+  const body = String(formData.get("body") || "");
+
+  await fetch(`http://localhost:5001/books/${params.id}/reviews`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ rating, body }),
+  });
+
+  return redirect(`/books/${params.id}`);
+}
+
 export default function BookDetail({ loaderData }: Route.ComponentProps) {
   const { book, similarBooks, reviews } = loaderData;
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(5);
+  const [reviewBody, setReviewBody] = useState("");
 
   const descriptionText = Array.isArray(book.description)
     ? book.description.join(" ")
@@ -37,6 +55,12 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
     descriptionText.length > 320
       ? `${descriptionText.slice(0, 320).trim()}...`
       : descriptionText;
+  const renderStars = (rating: number) => "★".repeat(rating) + "☆".repeat(5 - rating);
+
+  useEffect(() => {
+    setSelectedRating(5);
+    setReviewBody("");
+  }, [reviews.length]);
 
   return (
     <main className="book-detail-page">
@@ -76,13 +100,53 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
         <section className="reviews-section">
           <h2>Reviews</h2>
 
+          <Form method="post" className="review-form">
+            <fieldset className="review-field review-stars-group">
+              <span>Rating</span>
+              <div className="review-stars">
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`review-star-button ${
+                      value <= selectedRating ? "is-active" : ""
+                    }`}
+                    onClick={() => setSelectedRating(value)}
+                    aria-label={`Set rating to ${value} stars`}
+                    aria-pressed={value === selectedRating}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <input type="hidden" name="rating" value={selectedRating} />
+            </fieldset>
+
+            <label className="review-field">
+              <span>Your review</span>
+              <textarea
+                name="body"
+                rows={4}
+                className="review-textarea"
+                placeholder="Share what you thought about this book..."
+                value={reviewBody}
+                onChange={(event) => setReviewBody(event.target.value)}
+                required
+              />
+            </label>
+
+            <button type="submit" className="review-submit">
+              Add review
+            </button>
+          </Form>
+
           {reviews.length === 0 ? (
             <p>No reviews yet.</p>
           ) : (
             <div className="reviews-list">
               {reviews.map((review: any) => (
                 <article key={review._id} className="review-card">
-                  <p className="review-rating">Rating: {review.rating}/5</p>
+                  <p className="review-rating">{renderStars(review.rating)}</p>
                   <p className="review-body">{review.body}</p>
                 </article>
               ))}

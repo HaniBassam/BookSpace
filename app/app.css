@@ -266,6 +266,72 @@ body {
   gap: 1rem;
 }
 
+.review-form {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: #fffaf5;
+  box-shadow: 0 10px 30px rgba(72, 52, 43, 0.08);
+}
+
+.review-field {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: #5b4740;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d9c9bc;
+  border-radius: 0.9rem;
+  background: white;
+  color: #2f241f;
+  font: inherit;
+}
+
+.review-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.review-stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.review-star-button {
+  padding: 0;
+  border: none;
+  background: none;
+  color: #d3b6a4;
+  font-size: 1.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.review-star-button.is-active {
+  color: #7a5c4f;
+}
+
+.review-submit {
+  justify-self: start;
+  padding: 0.85rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: #7a5c4f;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .review-card {
   padding: 1rem 1.25rem;
   border-radius: 1rem;
@@ -448,6 +514,11 @@ body {
 
   .reviews-section {
     margin-bottom: 2rem;
+  }
+
+  .review-submit {
+    width: 100%;
+    justify-self: stretch;
   }
 
   .similar-books .book-grid {
