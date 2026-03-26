@@ -10,7 +10,16 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Home() {
+export async function loader() {
+  const response = await fetch("http://localhost:5001/books");
+  const books = await response.json();
+
+  return { books };
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { books } = loaderData;
+
   return (
     <main>
       <section>
@@ -23,7 +32,14 @@ export default function Home() {
           
         </section>
         <h2>Books</h2>
-        <p>Your books will appear here.</p>
+        <ul>
+          {books.map((book: any) => (
+            <li key={book._id}>
+              <h3>{book.title}</h3>
+              <p>{book.author}</p>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );
