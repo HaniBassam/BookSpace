@@ -34,6 +34,24 @@ app.get("/books", async (req, res) => {
   }
 })
 
+app.get("/books/:id", async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
+    res.json(book);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to fetch book" });
+    }
+  }
+});
+
 async function startServer() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
