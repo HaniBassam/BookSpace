@@ -23,7 +23,21 @@ app.get("/", (req, res) => {
 
 app.get("/books", async (req, res) => {
   try {
-    const books = await Book.find();
+    const { search } = req.query;
+
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { author: { $regex: search, $options: "i" } },
+          { genre: { $regex: search, $options: "i" } },
+        ],
+      };
+    }
+
+    const books = await Book.find(query);
     res.json(books);
   } catch (error) {
     if (error instanceof Error) {
@@ -32,7 +46,7 @@ app.get("/books", async (req, res) => {
       res.status(500).json({ message: "Failed to fetch books" });
     }
   }
-})
+});
 
 app.get("/books/:id", async (req, res) => {
   try {

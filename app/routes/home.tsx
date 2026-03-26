@@ -11,15 +11,20 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader() {
-  const response = await fetch("http://localhost:5001/books");
+export async function loader({ request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
+  const search = url.searchParams.get("search") || "";
+
+  const response = await fetch(
+    `http://localhost:5001/books?search=${encodeURIComponent(search)}`
+  );
   const books = await response.json();
 
-  return { books };
+  return { books, search };
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { books } = loaderData;
+  const { books, search } = loaderData;
 
   const popularBooks = [...books]
     .sort((a, b) => b.ratingsCount - a.ratingsCount)
@@ -37,6 +42,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   return (
     <main className="home-page">
       <div className="hero">
+        
         <section className="hero-intro">
           <p className="header">Welcome to Book Space!</p>
           <h1 className="hero-title">Find Your Next Favorite Book</h1>
@@ -44,6 +50,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             Explore books, keep track of what you read, and build your own
             reading space.
           </p>
+
+          <form method="get" className="search-form">
+            <input
+              type="text"
+              name="search"
+              placeholder="Search for books..."
+              defaultValue={search}
+              className="search-input"
+            />
+            <button type="submit" className="search-button">
+              Search
+            </button>
+          </form>
         </section>
 
         <section>
