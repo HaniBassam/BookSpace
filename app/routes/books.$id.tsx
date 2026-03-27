@@ -32,11 +32,19 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 export async function action({ request, params }: Route.ActionArgs) {
   const formData = await request.formData();
   const intent = String(formData.get("intent") || "review");
+  const cookie = request.headers.get("cookie") || "";
 
   if (intent === "save") {
-    await fetch(`http://127.0.0.1:5001/books/${params.id}/save`, {
+    const response = await fetch(`http://127.0.0.1:5001/books/${params.id}/save`, {
       method: "POST",
+      headers: {
+        Cookie: cookie,
+      },
     });
+
+    if (!response.ok) {
+      return redirect("/login");
+    }
 
     return redirect(`/books/${params.id}?saved=1`);
   }
@@ -48,6 +56,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Cookie: cookie,
     },
     body: JSON.stringify({ rating, body }),
   });
