@@ -1,10 +1,11 @@
 import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/profile";
+import { API_URL } from "../lib/api";
 
 export async function action({ request }: Route.ActionArgs) {
     const cookie = request.headers.get("cookie") || "";
 
-    await fetch("http://127.0.0.1:5001/logout", {
+    await fetch(`${API_URL}/logout`, {
         method: "POST",
         headers: {
             Cookie: cookie,
@@ -21,7 +22,7 @@ export async function action({ request }: Route.ActionArgs) {
 export async function loader({ request }: Route.LoaderArgs) {
     const cookie = request.headers.get("cookie") || "";
 
-    const userResponse = await fetch("http://127.0.0.1:5001/me", {
+    const userResponse = await fetch(`${API_URL}/me`, {
         headers: {
             Cookie: cookie,
         },
@@ -33,7 +34,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
     const user = await userResponse.json();
 
-    const booksResponse = await fetch("http://127.0.0.1:5001/books");
+    const booksResponse = await fetch(`${API_URL}/books`);
     const books = await booksResponse.json();
 
     const savedBookIds = (user.savedBooks || []).map((id: any) => id.toString());

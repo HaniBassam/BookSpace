@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
 import { Link, redirect } from "react-router";
+import { API_URL } from "../lib/api";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -17,7 +18,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const genre = url.searchParams.get("genre") || "";
   const cookie = request.headers.get("cookie") || "";
 
-  const userResponse = await fetch("http://127.0.0.1:5001/me", {
+  const userResponse = await fetch(`${API_URL}/me`, {
     headers: {
       Cookie: cookie,
     },
@@ -28,7 +29,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const response = await fetch(
-    `http://127.0.0.1:5001/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
+    `${API_URL}/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
   );
   const books = await response.json();
 
