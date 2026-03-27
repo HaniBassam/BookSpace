@@ -5,6 +5,17 @@ import type { Route } from "./+types/books.$id";
 export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const saveSuccess = url.searchParams.get("saved") === "1";
+  const cookie = request.headers.get("cookie") || "";
+
+  const userResponse = await fetch("http://127.0.0.1:5001/me", {
+    headers: {
+      Cookie: cookie,
+    },
+  });
+
+  if (!userResponse.ok) {
+    return redirect("/");
+  }
 
   const response = await fetch(`http://127.0.0.1:5001/books/${params.id}`);
   const book = await response.json();
@@ -43,7 +54,7 @@ export async function action({ request, params }: Route.ActionArgs) {
     });
 
     if (!response.ok) {
-      return redirect("/login");
+      return redirect("/");
     }
 
     return redirect(`/books/${params.id}?saved=1`);
@@ -87,7 +98,7 @@ export default function BookDetail({ loaderData }: Route.ComponentProps) {
   return (
     <main className="book-detail-page">
       <section className="book-detail">
-        <Link to="/" className="back-link">
+        <Link to="/home" className="back-link">
            ← Back to Books
         </Link>
 

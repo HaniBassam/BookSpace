@@ -1,4 +1,4 @@
-import { Form, redirect } from "react-router";
+import { Form, redirect, useActionData } from "react-router";
 import type { Route } from "./+types/login";
 
 export async function action({ request }: Route.ActionArgs) {
@@ -20,7 +20,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   const data = await response.json();
 
-  return redirect("/", {
+  return redirect("/home", {
     headers: {
       "Set-Cookie": `userId=${data.user._id}; Path=/; HttpOnly; SameSite=Lax`,
     },
@@ -28,19 +28,52 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function Login() {
-    return (
-        <main>
-            <section>
-                <h1>Login</h1>
+  const actionData = useActionData<typeof action>();
 
-                <Form method="post">
-                    <input
-                        type="email" name="email" placeholder="Email" required />
-                    <input
-                        type="password" name="password" placeholder="Password" required />
-                    <button type="submit">Login</button>
-                </Form>
-            </section>
-        </main>
-    );
+  return (
+    <main className="auth-page">
+      <section className="auth-shell">
+        <div className="auth-copy">
+          <p className="auth-eyebrow">Book Space Account</p>
+          <h1 className="auth-title">Log in to your reading space</h1>
+          <p className="auth-text">
+            Continue where you left off, access your saved books, and keep your
+            reviews connected to your profile.
+          </p>
+        </div>
+
+        <section className="auth-card">
+          <h2 className="auth-card-title">Welcome back</h2>
+          <p className="auth-card-text">
+            Enter your email and password to continue.
+          </p>
+
+          {actionData?.error ? (
+            <p className="auth-error">{actionData.error}</p>
+          ) : null}
+
+          <Form method="post" className="auth-form">
+            <label className="auth-field">
+              <span>Email</span>
+              <input type="email" name="email" placeholder="Email" required />
+            </label>
+
+            <label className="auth-field">
+              <span>Password</span>
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+            </label>
+
+            <button type="submit" className="auth-submit">
+              Log in
+            </button>
+          </Form>
+        </section>
+      </section>
+    </main>
+  );
 }

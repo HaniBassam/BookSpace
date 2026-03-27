@@ -11,7 +11,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
 
     if (!userResponse.ok) {
-        return redirect("/login");
+        return redirect("/");
     }
 
     const user = await userResponse.json();
@@ -34,7 +34,7 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
     return (
         <main className="profile-page">
             <section className="profile-section">
-                <Link to="/" className="back-link">
+                <Link to="/home" className="back-link">
                 Back to Home
                 </Link>
 

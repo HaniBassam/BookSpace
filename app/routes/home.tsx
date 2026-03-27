@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Link } from "react-router";
+import { Link, redirect } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,6 +15,17 @@ export async function loader({ request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const search = url.searchParams.get("search") || "";
   const genre = url.searchParams.get("genre") || "";
+  const cookie = request.headers.get("cookie") || "";
+
+  const userResponse = await fetch("http://127.0.0.1:5001/me", {
+    headers: {
+      Cookie: cookie,
+    },
+  });
+
+  if (!userResponse.ok) {
+    return redirect("/");
+  }
 
   const response = await fetch(
     `http://127.0.0.1:5001/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
@@ -45,6 +56,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <div className="hero">
 
         <section className="hero-intro">
+          <div className="hero-topbar">
+            <Link to="/profile" className="profile-link">
+              My Profile
+            </Link>
+          </div>
           <p className="header">Welcome to Book Space!</p>
           <h1 className="hero-title">Find Your Next Favorite Book</h1>
           <p className="hero-text">
