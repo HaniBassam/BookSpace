@@ -64,6 +64,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const body = String(formData.get("body") || "");
 
   await fetch(`http://127.0.0.1:5001/books/${params.id}/reviews`, {
+  const response = await fetch(`http://127.0.0.1:5001/books/${params.id}/reviews`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -71,6 +72,10 @@ export async function action({ request, params }: Route.ActionArgs) {
     },
     body: JSON.stringify({ rating, body }),
   });
+
+  if (!response.ok) {
+    return redirect("/");
+  }
 
   return redirect(`/books/${params.id}`);
 }

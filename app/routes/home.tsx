@@ -82,7 +82,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               <option value="Fiction">Fiction</option>
               <option value="Fantasy">Fantasy</option>
               <option value="Science Fiction">Science Fiction</option>
-              <option value="Mystery">Young Adult</option>
+              <option value="Young Adult">Young Adult</option>
               <option value="Romance">Romance</option>
             </select>
 

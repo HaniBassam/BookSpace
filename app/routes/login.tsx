@@ -18,12 +18,10 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: "Login failed" };
   }
 
-  const data = await response.json();
+  const setCookie = response.headers.get("set-cookie");
 
   return redirect("/home", {
-    headers: {
-      "Set-Cookie": `userId=${data.user._id}; Path=/; HttpOnly; SameSite=Lax`,
-    },
+    headers: setCookie ? { "Set-Cookie": setCookie } : undefined,
   });
 }
 

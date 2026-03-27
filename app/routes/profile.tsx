@@ -1,5 +1,22 @@
-import { Link, redirect } from "react-router";
+import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/profile";
+
+export async function action({ request }: Route.ActionArgs) {
+    const cookie = request.headers.get("cookie") || "";
+
+    await fetch("http://127.0.0.1:5001/logout", {
+        method: "POST",
+        headers: {
+            Cookie: cookie,
+        },
+    });
+
+    return redirect("/", {
+        headers: {
+            "Set-Cookie": "userId=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax",
+        },
+    });
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
     const cookie = request.headers.get("cookie") || "";
@@ -41,6 +58,12 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
                 <h1 className="profile-title">My Profile</h1>
                 <p className="profile-name">{user.fullName}</p>
                 <p className="profile-email">{user.email}</p>
+
+                <Form method="post" className="logout-form">
+                    <button type="submit" className="logout-button">
+                        Log out
+                    </button>
+                </Form>
 
                 <section className="saved-books-section">
                     <h2>Saved Books</h2>
