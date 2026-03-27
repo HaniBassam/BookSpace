@@ -120,6 +120,7 @@ app.get("/me", async (req, res) => {
       fullName: user.fullName,
       email: user.email,
       role: user.role,
+      savedBooks: user.savedBooks,
     });
   } catch (error) {
     if (error instanceof Error) {
