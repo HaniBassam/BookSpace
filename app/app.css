@@ -686,6 +686,21 @@ body {
   cursor: pointer;
 }
 
+.auth-switch {
+  margin: 1rem 0 0;
+  color: #6a544b;
+}
+
+.auth-link {
+  color: #7a5c4f;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 768px) {
   .auth-page {
     padding: 2rem 1rem;

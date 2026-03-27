@@ -1,32 +1,33 @@
 import { Form, Link, redirect, useActionData } from "react-router";
-import type { Route } from "./+types/login";
+import type { Route } from "./+types/signup";
 import { API_URL } from "../lib/api";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
+  const fullName = String(formData.get("fullName") || "");
   const email = String(formData.get("email") || "");
   const password = String(formData.get("password") || "");
 
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch(`${API_URL}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ fullName, email, password }),
   });
 
   if (!response.ok) {
-    return { error: "Login failed" };
+    const data = await response.json().catch(() => null);
+
+    return {
+      error: data?.message || "Sign up failed",
+    };
   }
 
-  const setCookie = response.headers.get("set-cookie");
-
-  return redirect("/home", {
-    headers: setCookie ? { "Set-Cookie": setCookie } : undefined,
-  });
+  return redirect("/");
 }
 
-export default function Login() {
+export default function Signup() {
   const actionData = useActionData<typeof action>();
 
   return (
@@ -34,17 +35,17 @@ export default function Login() {
       <section className="auth-shell">
         <div className="auth-copy">
           <p className="auth-eyebrow">Book Space Account</p>
-          <h1 className="auth-title">Log in to your reading space</h1>
+          <h1 className="auth-title">Create your reading space</h1>
           <p className="auth-text">
-            Continue where you left off, access your saved books, and keep your
-            reviews connected to your profile.
+            Make an account to save books, write reviews, and keep your reading
+            profile in one place.
           </p>
         </div>
 
         <section className="auth-card">
-          <h2 className="auth-card-title">Welcome back</h2>
+          <h2 className="auth-card-title">Create account</h2>
           <p className="auth-card-text">
-            Enter your email and password to continue.
+            Enter your details to get started with Book Space.
           </p>
 
           {actionData?.error ? (
@@ -52,6 +53,16 @@ export default function Login() {
           ) : null}
 
           <Form method="post" className="auth-form">
+            <label className="auth-field">
+              <span>Full name</span>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full name"
+                required
+              />
+            </label>
+
             <label className="auth-field">
               <span>Email</span>
               <input type="email" name="email" placeholder="Email" required />
@@ -64,18 +75,19 @@ export default function Login() {
                 name="password"
                 placeholder="Password"
                 required
+                minLength={8}
               />
             </label>
 
             <button type="submit" className="auth-submit">
-              Log in
+              Create account
             </button>
           </Form>
 
           <p className="auth-switch">
-            Need an account?{" "}
-            <Link to="/signup" className="auth-link">
-              Sign up
+            Already have an account?{" "}
+            <Link to="/" className="auth-link">
+              Log in
             </Link>
           </p>
         </section>
