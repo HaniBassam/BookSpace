@@ -6,15 +6,15 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const saveSuccess = url.searchParams.get("saved") === "1";
 
-  const response = await fetch(`http://localhost:5001/books/${params.id}`);
+  const response = await fetch(`http://127.0.0.1:5001/books/${params.id}`);
   const book = await response.json();
 
   const reviewsResponse = await fetch(
-    `http://localhost:5001/books/${params.id}/reviews`
+    `http://127.0.0.1:5001/books/${params.id}/reviews`
   );
   const reviews = await reviewsResponse.json();
 
-  const booksResponse = await fetch("http://localhost:5001/books");
+  const booksResponse = await fetch("http://127.0.0.1:5001/books");
   const books = await booksResponse.json();
 
   const similarBooks = books
@@ -34,7 +34,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const intent = String(formData.get("intent") || "review");
 
   if (intent === "save") {
-    await fetch(`http://localhost:5001/books/${params.id}/save`, {
+    await fetch(`http://127.0.0.1:5001/books/${params.id}/save`, {
       method: "POST",
     });
 
@@ -44,7 +44,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const rating = Number(formData.get("rating"));
   const body = String(formData.get("body") || "");
 
-  await fetch(`http://localhost:5001/books/${params.id}/reviews`, {
+  await fetch(`http://127.0.0.1:5001/books/${params.id}/reviews`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -17,7 +17,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const genre = url.searchParams.get("genre") || "";
 
   const response = await fetch(
-    `http://localhost:5001/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
+    `http://127.0.0.1:5001/books?search=${encodeURIComponent(search)}&genre=${encodeURIComponent(genre)}`
   );
   const books = await response.json();
 
