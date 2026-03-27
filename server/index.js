@@ -199,16 +199,21 @@ app.get("/books/:id/reviews", async (req, res) => {
 app.post("/books/:id/reviews", async (req, res) => {
   try {
     const { rating, body } = req.body;
+    const { userId } = req.cookies;
 
-    const demoUser = await User.findOne({ email: "demo@bookspace.com" });
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
 
-    if (!demoUser) {
-      return res.status(404).json({ message: "Demo user not found" });
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found"});
     }
 
     const review = await Review.create({
       book: req.params.id,
-      user: demoUser._id,
+      user: userId,
       rating,
       body,
     });
@@ -229,13 +234,19 @@ app.post("/books/:id/reviews", async (req, res) => {
 
 app.post("/books/:id/save", async (req, res) => {
   try {
-    const demoUser = await User.findOne({ email: "demo@bookspace.com" });
+    const { userId } = req.cookies;
 
-    if (!demoUser) {
-      return res.status(404).json({ message: "Demo user not found" });
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
     }
 
-    await User.findByIdAndUpdate(demoUser._id, {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await User.findByIdAndUpdate(userId, {
       $addToSet: { savedBooks: req.params.id },
     });
 
