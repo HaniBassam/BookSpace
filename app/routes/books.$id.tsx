@@ -63,7 +63,6 @@ export async function action({ request, params }: Route.ActionArgs) {
   const rating = Number(formData.get("rating"));
   const body = String(formData.get("body") || "");
 
-  await fetch(`http://127.0.0.1:5001/books/${params.id}/reviews`, {
   const response = await fetch(`http://127.0.0.1:5001/books/${params.id}/reviews`, {
     method: "POST",
     headers: {
