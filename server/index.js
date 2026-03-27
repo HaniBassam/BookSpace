@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import cookieParser from "cookie-parser";
 import Book from "./models/Book.js";
 import Review from "./models/Review.js";
 import User from "./models/User.js";
@@ -19,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-
+app.use(cookieParser());
 app.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
@@ -72,6 +73,11 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    res.cookie("userId", user._id.toString(), {
+      httpOnly: true,
+      sameSite: "lax",
+    });
+
     res.status(200).json({
       message: "Login successful",
       user: {
@@ -90,6 +96,39 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie("userId");
+  res.status(200).json({ message: "Logged out successfully" });
+});
+
+app.get("/me", async (req, res) => {
+  try {
+    const { userId } = req.cookies;
+
+    if (!userId) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    } else {
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("API is running...");
