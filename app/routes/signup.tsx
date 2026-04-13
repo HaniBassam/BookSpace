@@ -1,6 +1,6 @@
 import { Form, Link, redirect, useActionData } from "react-router";
 import type { Route } from "./+types/signup";
-import { API_URL } from "../lib/api";
+import { apiUrl } from "../lib/api";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -8,7 +8,7 @@ export async function action({ request }: Route.ActionArgs) {
   const email = String(formData.get("email") || "");
   const password = String(formData.get("password") || "");
 
-  const response = await fetch(`${API_URL}/signup`, {
+  const response = await fetch(apiUrl(request, "/signup"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

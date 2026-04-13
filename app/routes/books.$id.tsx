@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Form, Link, redirect } from "react-router";
 import type { Route } from "./+types/books.$id";
-import { API_URL } from "../lib/api";
+import { apiUrl } from "../lib/api";
 
 export async function loader({ request, params }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const saveSuccess = url.searchParams.get("saved") === "1";
   const cookie = request.headers.get("cookie") || "";
 
-  const userResponse = await fetch(`${API_URL}/me`, {
+  const userResponse = await fetch(apiUrl(request, "/me"), {
     headers: {
       Cookie: cookie,
     },
@@ -18,15 +18,15 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     return redirect("/");
   }
 
-  const response = await fetch(`${API_URL}/books/${params.id}`);
+  const response = await fetch(apiUrl(request, `/books/${params.id}`));
   const book = await response.json();
 
   const reviewsResponse = await fetch(
-    `${API_URL}/books/${params.id}/reviews`
+    apiUrl(request, `/books/${params.id}/reviews`)
   );
   const reviews = await reviewsResponse.json();
 
-  const booksResponse = await fetch(`${API_URL}/books`);
+  const booksResponse = await fetch(apiUrl(request, "/books"));
   const books = await booksResponse.json();
 
   const similarBooks = books
@@ -47,7 +47,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const cookie = request.headers.get("cookie") || "";
 
   if (intent === "save") {
-    const response = await fetch(`${API_URL}/books/${params.id}/save`, {
+    const response = await fetch(apiUrl(request, `/books/${params.id}/save`), {
       method: "POST",
       headers: {
         Cookie: cookie,
@@ -64,7 +64,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   const rating = Number(formData.get("rating"));
   const body = String(formData.get("body") || "");
 
-  const response = await fetch(`${API_URL}/books/${params.id}/reviews`, {
+  const response = await fetch(apiUrl(request, `/books/${params.id}/reviews`), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

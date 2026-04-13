@@ -51,6 +51,28 @@ MONGO_URI=your_mongodb_connection_string
 PORT=5001
 ```
 
+If you deploy the frontend on Vercel and keep the Express backend separate, set:
+
+```env
+API_PROXY_URL=your_backend_url
+```
+
+The frontend now calls `/api/...` on the same domain, and that route proxies to the backend URL above.
+
+### 2a. Vercel deployment
+
+When you deploy the frontend to Vercel:
+
+1. Set `API_PROXY_URL` to your deployed backend URL in the Vercel project settings.
+2. Keep the frontend calling `/api/...` only. Do not hardcode the backend URL in the app.
+3. Make sure the backend allows requests from the Vercel frontend domain if you keep CORS enabled.
+
+Example:
+
+```env
+API_PROXY_URL=https://your-backend.onrender.com
+```
+
 ### 3. Seed the database
 
 Books:
@@ -89,3 +111,5 @@ Frontend runs on:
 Backend runs on:
 
 `http://localhost:5001`
+
+For local development, the proxy route defaults to `http://127.0.0.1:5001`.

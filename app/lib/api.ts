@@ -1,1 +1,5 @@
-export const API_URL = process.env.API_URL || "http://127.0.0.1:5001";
+export function apiUrl(request: Request, path: string) {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return new URL(`/api${normalizedPath}`, request.url);
+}

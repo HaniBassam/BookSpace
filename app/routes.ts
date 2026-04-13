@@ -6,4 +6,5 @@ export default [
     route("home", "routes/home.tsx"),
     route("books/:id", "routes/books.$id.tsx"),
     route("profile", "routes/profile.tsx"),
+    route("api/*", "routes/api.$.ts"),
 ] satisfies RouteConfig;
